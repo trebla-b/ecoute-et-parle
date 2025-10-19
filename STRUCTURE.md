@@ -13,7 +13,7 @@ A local-first web app to **listen → (optionally) read → repeat** sentences i
   - I can press a mic button, speak, and get an immediate score (good/bad) with word-level diffs showing what I mispronounced or missed.
   - I can retry a sentence and see my attempt history.
 - **Learner (accessibility)**
-  - Speech capture works on every major browser thanks to a Vosk WASM fallback when the Web Speech API is unavailable.
+  - Speech capture relies on the browser Web Speech API (Chrome desktop support). A clear message invites users on unsupported browsers to switch.
   - Keyboard shortcuts (Space = play/pause, M = mic, R = next) keep working no matter the language.
 - **Admin**
   - I can add, edit, and delete sentences (sentence text, translation text, language metadata, difficulty tag).
@@ -26,11 +26,9 @@ _No authentication. Everything runs on localhost._
 ---
 
 ## 3) Architecture (MVP)
-**Frontend (browser):**
 - Vite + React UI with two routes (`/` practice, `/admin` admin).
 - Speech layer:
-  - **Web Speech API** when available for STT.
-  - **Vosk WASM** fallback for browsers without native STT (loadable model assets).
+  - **Web Speech API** for STT (Chrome desktop requirement).
   - TTS via `speechSynthesis` with **voice-picker UI** (prefers enhanced voices such as Google/Apple).
 - Diff/align: dynamic word-level alignment (Needleman-Wunsch/Levenshtein) in TypeScript.
 
@@ -68,8 +66,7 @@ project/
       lib/
         align.ts        # word/token alignment utils
         csv.ts          # csv parse/stringify (Papaparse)
-        speech.ts       # TTS/STT wrappers + voice discovery
-        vosk.ts         # WASM loader + transcription helper
+        speech.ts       # TTS/STT wrappers + voice discovery (Web Speech API only)
         languages.ts    # language metadata + defaults
         api.ts          # fetch helpers
   backend/
@@ -108,7 +105,7 @@ _Notes:_
 ---
 
 ## 6) API design (REST)
-**Base URL**: `http://localhost:5173` (frontend dev) and `http://localhost:8000/api` (backend)
+**Base URL**: `http://localhost:8050` (frontend dev) and `http://localhost:8001/api` (backend)
 
 - `GET /api/sentences?limit&offset&difficulty&search&target_lang&translation_lang`
 - `POST /api/sentences`
@@ -151,7 +148,7 @@ _Notes:_
 ### A) Practice flow
 1. Client fetches a sentence that matches the active language filters.
 2. TTS speaks `sentence_text` in `target_lang` using the preferred voice (default: best-match for `fr-FR`).
-3. User taps **Mic** → capture speech; on end, get `asr_text` from Web Speech API or Vosk fallback.
+3. User taps **Mic** → capture speech via the Web Speech API (Chrome). Unsupported browsers display guidance.
 4. Tokenize `sentence_text` vs `asr_text` (language-aware normalization).
 5. Run alignment → compute per-token ops + accuracy = `words_correct / words_total`.
 6. Compute binary `score` (≥ 90% → 1 else 0) and store `asr_lang`.
@@ -179,7 +176,7 @@ _Notes:_
 - Provide **Play/Pause** controls and keyboard shortcuts.
 - Visually clear token highlights; ARIA live region for results.
 - UI strings prepared for localisation; defaults to French UI with Chinese translations for content, but language selectors allow switching target/translation pairs.
-- Voice selector announces active voice; fallback instructions for downloading Vosk model when automatic STT is unavailable.
+- Voice selector announces active voice; unsupported-browser message suggests switching to Chrome for STT.
 
 ---
 
@@ -188,25 +185,25 @@ _Notes:_
 ```bash
 uv venv && source .venv/bin/activate
 uv pip install -r backend/requirements.txt
-uvicorn backend.app:app --reload --port 8000
+uvicorn backend.app:app --reload --port 8001
 ```
 
 ### Frontend
 ```bash
 cd frontend
 npm i
-npm run dev    # serves on :5173, proxy to :8000
+npm run dev    # serves on :8050, proxy to :8001
 ```
 
-### Vosk fallback (optional)
-Download a Vosk model (e.g. `vosk-model-small-fr-0.22`) and place it under `frontend/public/vosk/fr/`. The app will fetch it automatically when Web Speech API is unavailable.
+### Browser support note
+La reconnaissance vocale nécessite la Web Speech API (Chrome desktop). Sur les navigateurs qui ne l'exposent pas, un message indique d'utiliser Chrome et le micro est désactivé.
 
 ---
 
 ## 11) Testing
 - **Unit**: alignment function (gold pairs), CSV adapter (append, update, delete), API contracts.
 - **E2E**: Playwright: practice flow, admin CRUD, language switching, import/export.
-- **Manual**: Browser matrix (Chrome/Edge/Firefox/Safari); ensure Vosk fallback activates where Web Speech API is absent.
+- **Manual**: Chrome desktop flow (lecture + enregistrement) ; vérifier que les navigateurs sans Web Speech API affichent bien le message bloquant.
 
 ---
 

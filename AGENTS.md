@@ -43,7 +43,7 @@
 **Tasks**
 1. `speech.ts`: 
    - `speak(text, {rate, voiceURI})` using `window.speechSynthesis` + voix naturelles.
-   - `record(timeoutMs)` using Web Speech API; fallback Vosk WASM (MediaRecorder + modèle local).
+   - `record(timeoutMs)` using Web Speech API (Chrome requirement) avec message d'erreur clair sinon.
 2. `align.ts`: implement tokenization + DP alignment, return ops array and accuracy.
 3. Edge cases: apostrophes (l’/d’), punctuation, numbers.
 

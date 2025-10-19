@@ -1,5 +1,3 @@
-import { ensureRecognizer, releaseRecognizer } from "./vosk";
-
 export interface SpeakOptions {
   rate?: number;
   pitch?: number;
@@ -10,7 +8,6 @@ export interface SpeakOptions {
 export interface RecordResult {
   transcript: string;
   confidence: number;
-  engine: "web-speech" | "vosk";
 }
 
 export interface VoiceOption {
@@ -31,11 +28,7 @@ function getSpeechRecognition(): SpeechRecognitionConstructor | null {
   const globalAny = window as typeof window & {
     webkitSpeechRecognition?: SpeechRecognitionConstructor;
   };
-  return (
-    globalAny.SpeechRecognition ||
-    globalAny.webkitSpeechRecognition ||
-    null
-  );
+  return globalAny.SpeechRecognition || globalAny.webkitSpeechRecognition || null;
 }
 
 function mapVoice(voice: SpeechSynthesisVoice): VoiceOption {
@@ -140,22 +133,10 @@ export async function recordSpeech(timeoutMs = 8000, lang = "fr-FR"): Promise<Re
   }
 
   const Recognition = getSpeechRecognition();
-  if (Recognition) {
-    try {
-      return await recordWithWebSpeech(Recognition, timeoutMs, lang);
-    } catch (error) {
-      console.warn("Web Speech API failed, falling back to Vosk:", error);
-    }
+  if (!Recognition) {
+    throw new Error("Web Speech API is not supported. Please use Google Chrome.");
   }
 
-  return recordWithVosk(timeoutMs, lang);
-}
-
-async function recordWithWebSpeech(
-  Recognition: SpeechRecognitionConstructor,
-  timeoutMs: number,
-  lang: string
-): Promise<RecordResult> {
   const recognition = new Recognition();
   recognition.lang = lang;
   recognition.interimResults = false;
@@ -171,8 +152,7 @@ async function recordWithWebSpeech(
       } else {
         resolve({
           transcript: result.transcript,
-          confidence: result.confidence ?? 0.8,
-          engine: "web-speech"
+          confidence: result.confidence ?? 0.8
         });
       }
       recognition.stop();
@@ -197,133 +177,4 @@ async function recordWithWebSpeech(
       }, timeoutMs);
     }
   });
-}
-
-async function recordWithVosk(timeoutMs: number, lang: string): Promise<RecordResult> {
-  if (!navigator.mediaDevices?.getUserMedia) {
-    throw new Error("Microphone access is not available in this browser");
-  }
-  if (typeof window === "undefined" || typeof window.MediaRecorder === "undefined") {
-    throw new Error("MediaRecorder API is not supported in this browser");
-  }
-
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  const sampleRate = 16000;
-  let recognizer: any;
-  try {
-    ({ recognizer } = await ensureRecognizer(lang, sampleRate));
-  } catch (error) {
-    stream.getTracks().forEach((track) => track.stop());
-    throw new Error(
-      `Vosk fallback unavailable for ${lang}. Place a model under /public/vosk/<lang> (see README).`
-    );
-  }
-
-  const mediaRecorder = new MediaRecorder(stream);
-  const chunks: BlobPart[] = [];
-
-  mediaRecorder.addEventListener("dataavailable", (event) => {
-    if (event.data && event.data.size > 0) {
-      chunks.push(event.data);
-    }
-  });
-
-  const recording = new Promise<Blob>((resolve, reject) => {
-    mediaRecorder.addEventListener("stop", () => {
-      resolve(new Blob(chunks, { type: mediaRecorder.mimeType }));
-    });
-    mediaRecorder.addEventListener("error", (event) => {
-      reject(event.error);
-    });
-  });
-
-  mediaRecorder.start();
-  const stopTimer = window.setTimeout(() => {
-    if (mediaRecorder.state === "recording") {
-      mediaRecorder.stop();
-    }
-  }, timeoutMs);
-
-  const audioBlob = await recording;
-  window.clearTimeout(stopTimer);
-  stream.getTracks().forEach((track) => track.stop());
-
-  const transcript = await transcribeBlobWithVosk(audioBlob, recognizer, sampleRate, lang);
-  const confidence = transcript ? 0.75 : 0;
-
-  return { transcript, confidence, engine: "vosk" };
-}
-
-async function transcribeBlobWithVosk(
-  blob: Blob,
-  recognizer: any,
-  sampleRate: number,
-  lang: string
-): Promise<string> {
-  const arrayBuffer = await blob.arrayBuffer();
-  const audioContext = new AudioContext();
-  const audioBuffer = await audioContext.decodeAudioData(arrayBuffer.slice(0));
-  const monoData = mixToMono(audioBuffer);
-  const resampled = resampleBuffer(monoData, audioBuffer.sampleRate, sampleRate);
-  await audioContext.close();
-
-  const chunkSize = 4096;
-  for (let i = 0; i < resampled.length; i += chunkSize) {
-    const chunk = resampled.subarray(i, i + chunkSize);
-    recognizer.acceptWaveform(chunk);
-  }
-  const finalResult = recognizer.finalResult();
-  if (!finalResult) return "";
-  try {
-    const parsed = typeof finalResult === "string" ? JSON.parse(finalResult) : finalResult;
-    if (parsed?.text) {
-      return parsed.text;
-    }
-    if (Array.isArray(parsed?.result) && parsed.result.length) {
-      return parsed.result.map((item: { word: string }) => item.word).join(" ");
-    }
-  } catch {
-    // ignore parse errors
-  } finally {
-    await releaseRecognizer(lang);
-  }
-  if (typeof finalResult === "string") {
-    return finalResult;
-  }
-  return "";
-}
-
-function mixToMono(buffer: AudioBuffer): Float32Array {
-  if (buffer.numberOfChannels === 1) {
-    return buffer.getChannelData(0);
-  }
-  const output = new Float32Array(buffer.length);
-  for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
-    const channelData = buffer.getChannelData(channel);
-    for (let i = 0; i < channelData.length; i++) {
-      output[i] += channelData[i] / buffer.numberOfChannels;
-    }
-  }
-  return output;
-}
-
-function resampleBuffer(
-  data: Float32Array,
-  sourceRate: number,
-  targetRate: number
-): Float32Array {
-  if (sourceRate === targetRate) {
-    return new Float32Array(data);
-  }
-  const ratio = sourceRate / targetRate;
-  const newLength = Math.round(data.length / ratio);
-  const result = new Float32Array(newLength);
-  for (let i = 0; i < newLength; i++) {
-    const index = i * ratio;
-    const leftIndex = Math.floor(index);
-    const rightIndex = Math.min(data.length - 1, leftIndex + 1);
-    const interp = index - leftIndex;
-    result[i] = data[leftIndex] * (1 - interp) + data[rightIndex] * interp;
-  }
-  return result;
 }

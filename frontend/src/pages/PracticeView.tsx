@@ -42,7 +42,6 @@ export function PracticeView() {
   const [currentScore, setCurrentScore] = useState<number | null>(null);
   const [attemptHistory, setAttemptHistory] = useState<Attempt[]>([]);
   const [status, setStatus] = useState<string | null>(null);
-  const [engineUsed, setEngineUsed] = useState<string | null>(null);
 
   // Load preferences from localStorage
   useEffect(() => {
@@ -130,7 +129,6 @@ export function PracticeView() {
     setCurrentDiff([]);
     setCurrentScore(null);
     setStatus(null);
-    setEngineUsed(null);
     setShowSentenceText(false);
   }, [sentence?.id, targetLang]);
 
@@ -178,8 +176,7 @@ export function PracticeView() {
     try {
       const result = await recordSpeech(8000, targetLang);
       const duration = Math.round(performance.now() - start);
-      setEngineUsed(result.engine);
-      await processAttempt(sentence, result.transcript, duration, result.engine);
+      await processAttempt(sentence, result.transcript, duration);
     } catch (err) {
       setStatus(err instanceof Error ? err.message : "Erreur d'enregistrement");
     } finally {
@@ -187,12 +184,7 @@ export function PracticeView() {
     }
   };
 
-  const processAttempt = async (
-    refSentence: Sentence,
-    transcript: string,
-    duration: number,
-    engine: string
-  ) => {
+  const processAttempt = async (refSentence: Sentence, transcript: string, duration: number) => {
     const alignment = alignTexts(refSentence.sentence_text, transcript);
     setCurrentDiff(alignment.diff);
     setCurrentScore(alignment.accuracy);
@@ -217,7 +209,6 @@ export function PracticeView() {
           ? "Bravo ! Votre prononciation est excellente."
           : "Continuez ! Réessayez pour améliorer la prononciation."
       );
-      setEngineUsed(engine);
     } catch (err) {
       setStatus(
         err instanceof Error ? err.message : "Erreur lors de l'enregistrement de la tentative"
@@ -299,14 +290,8 @@ export function PracticeView() {
         ) : null}
         {!webSpeechAvailable ? (
           <p className="muted">
-            Web Speech API n'est pas disponible sur ce navigateur. Le fallback Vosk sera utilisé si
-            un modèle est présent dans <code>public/vosk</code>.
-          </p>
-        ) : null}
-        {engineUsed === "vosk" ? (
-          <p className="muted">
-            Transcription réalisée par Vosk (modèle hors ligne). Assurez-vous que les fichiers du
-            modèle sont présents dans <code>frontend/public/vosk</code>.
+            Ce navigateur ne supporte pas la Web Speech API. Veuillez utiliser Google Chrome pour la
+            reconnaissance vocale.
           </p>
         ) : null}
       </div>
@@ -322,11 +307,6 @@ export function PracticeView() {
         ) : null}
         <DiffView diff={currentDiff} />
         {status ? <p className="status-message">{status}</p> : null}
-        {engineUsed ? (
-          <small className="muted">
-            Source reconnue : {engineUsed === "vosk" ? "Vosk (hors ligne)" : "Web Speech API"}
-          </small>
-        ) : null}
       </div>
 
       <div className="card attempts-card">
