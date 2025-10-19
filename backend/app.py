@@ -287,6 +287,12 @@ def attempt_from_row(row: dict) -> Attempt:
 
 def attempt_to_row(attempt: Attempt) -> dict:
     data = attempt.model_dump()
+    diff_entries = []
+    for token in data["diff_json"]:
+        if isinstance(token, dict):
+            diff_entries.append(token)
+        else:
+            diff_entries.append(token.model_dump())
     return {
         "id": data["id"],
         "sentence_id": data["sentence_id"],
@@ -296,7 +302,7 @@ def attempt_to_row(attempt: Attempt) -> dict:
         "score": f"{data['score']}",
         "words_total": str(data["words_total"]),
         "words_correct": str(data["words_correct"]),
-        "diff_json": json.dumps([token.model_dump() for token in data["diff_json"]]),
+        "diff_json": json.dumps(diff_entries),
         "duration_ms": str(data["duration_ms"]),
         "created_at": data["created_at"],
     }
