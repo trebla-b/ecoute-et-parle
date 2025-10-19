@@ -14,8 +14,10 @@ def now_iso() -> str:
 
 
 class SentenceBase(BaseModel):
-    fr_text: str = Field(..., min_length=1)
-    en_text: Optional[str] = None
+    sentence_text: str = Field(..., min_length=1)
+    target_lang: str = Field(default="fr-FR", min_length=2)
+    translation_text: Optional[str] = None
+    translation_lang: str = Field(default="zh-CN", min_length=2)
     difficulty: Optional[Difficulty] = "medium"
     tags: Optional[str] = ""
 
@@ -25,8 +27,10 @@ class SentenceCreate(SentenceBase):
 
 
 class SentenceUpdate(BaseModel):
-    fr_text: Optional[str] = None
-    en_text: Optional[str] = None
+    sentence_text: Optional[str] = None
+    target_lang: Optional[str] = None
+    translation_text: Optional[str] = None
+    translation_lang: Optional[str] = None
     difficulty: Optional[Difficulty] = None
     tags: Optional[str] = None
 
@@ -46,6 +50,8 @@ class DiffToken(BaseModel):
 class AttemptBase(BaseModel):
     sentence_id: str
     asr_text: str
+    target_lang: str = Field(default="fr-FR", min_length=2)
+    asr_lang: str = Field(default="fr-FR", min_length=2)
     score: float
     words_total: int
     words_correct: int

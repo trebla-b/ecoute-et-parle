@@ -28,7 +28,9 @@ export function ImportExport({ onImport, onExport, busy }: ImportExportProps) {
         </button>
       </div>
       <p className="muted">
-        Les données sont stockées localement dans <code>data/sentences.csv</code>.
+        Les données sont stockées localement dans <code>data/sentences.csv</code> (colonnes :{" "}
+        <code>sentence_text</code>, <code>target_lang</code>, <code>translation_text</code>,{" "}
+        <code>translation_lang</code>…).
       </p>
     </section>
   );

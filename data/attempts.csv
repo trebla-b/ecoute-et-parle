@@ -1,1 +1,1 @@
-id,sentence_id,asr_text,score,words_total,words_correct,diff_json,duration_ms,created_at
+id,sentence_id,target_lang,asr_lang,asr_text,score,words_total,words_correct,diff_json,duration_ms,created_at

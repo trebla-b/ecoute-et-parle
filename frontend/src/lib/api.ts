@@ -29,6 +29,8 @@ export interface SentenceQuery {
   offset?: number;
   difficulty?: string;
   search?: string;
+  target_lang?: string;
+  translation_lang?: string;
 }
 
 export const api = {
@@ -64,8 +66,11 @@ export const api = {
     await request<void>(`${API_BASE}/sentences/${id}`, { method: "DELETE" });
   },
 
-  async getAttempts(sentenceId?: string): Promise<Attempt[]> {
-    const suffix = sentenceId ? `?sentence_id=${encodeURIComponent(sentenceId)}` : "";
+  async getAttempts(sentenceId?: string, targetLang?: string): Promise<Attempt[]> {
+    const search = new URLSearchParams();
+    if (sentenceId) search.set("sentence_id", sentenceId);
+    if (targetLang) search.set("target_lang", targetLang);
+    const suffix = search.toString() ? `?${search.toString()}` : "";
     return request<Attempt[]>(`${API_BASE}/attempts${suffix}`, {
       method: "GET",
       headers: { "Content-Type": "application/json" }

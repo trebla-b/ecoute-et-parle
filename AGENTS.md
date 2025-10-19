@@ -25,8 +25,8 @@
 **Goal:** Build React UI with two routes: `/` (Practice), `/admin` (Admin).
 
 **Tasks**
-1. Practice screen: sentence card, Play TTS, Show/Hide French text, Show/Hide English translation, Mic button, Result panel with DiffView and score chip, Retry.
-2. Admin screen: table CRUD (inline), import/export controls, filter by difficulty.
+1. Practice screen: sentence card, Play TTS with voice picker, Show/Hide phrase & traduction, Mic button, Result panel with DiffView and score chip, Retry.
+2. Admin screen: table CRUD (inline) avec métadonnées de langue, import/export controls, filtres par difficulté/langues.
 3. `api.ts` with fetch wrappers; optimistic UI for CRUD.
 4. Responsive layout; keyboard shortcuts: Space=Play/Pause, M=Mic, R=Retry.
 
@@ -42,8 +42,8 @@
 
 **Tasks**
 1. `speech.ts`: 
-   - `speak(text, {rate})` using `window.speechSynthesis`.
-   - `record(timeoutMs)` using Web Speech API; if unavailable, provide stub/fallback hooks for Vosk WASM.
+   - `speak(text, {rate, voiceURI})` using `window.speechSynthesis` + voix naturelles.
+   - `record(timeoutMs)` using Web Speech API; fallback Vosk WASM (MediaRecorder + modèle local).
 2. `align.ts`: implement tokenization + DP alignment, return ops array and accuracy.
 3. Edge cases: apostrophes (l’/d’), punctuation, numbers.
 
@@ -59,7 +59,7 @@
 **Schema:** per STRUCTURE.md.
 
 **Acceptance**
-- CSV validates; no empty `fr_text`; difficulty ∈ {easy,medium,hard}.
+- CSV valide; colonne `sentence_text` non vide; difficulty ∈ {easy,medium,hard}; `target_lang`/`translation_lang` renseignées.
 
 ---
 

@@ -8,8 +8,10 @@ export interface DiffToken {
 
 export interface Sentence {
   id: string;
-  fr_text: string;
-  en_text?: string | null;
+  target_lang: string;
+  sentence_text: string;
+  translation_lang: string;
+  translation_text?: string | null;
   difficulty: Difficulty;
   tags?: string;
   created_at: string;
@@ -17,8 +19,10 @@ export interface Sentence {
 }
 
 export interface SentenceCreate {
-  fr_text: string;
-  en_text?: string | null;
+  sentence_text: string;
+  target_lang: string;
+  translation_text?: string | null;
+  translation_lang: string;
   difficulty?: Difficulty;
   tags?: string;
 }
@@ -26,6 +30,8 @@ export interface SentenceCreate {
 export interface Attempt {
   id: string;
   sentence_id: string;
+  target_lang: string;
+  asr_lang: string;
   asr_text: string;
   score: number;
   words_total: number;
@@ -37,6 +43,8 @@ export interface Attempt {
 
 export interface AttemptCreate {
   sentence_id: string;
+  target_lang: string;
+  asr_lang: string;
   asr_text: string;
   score: number;
   words_total: number;

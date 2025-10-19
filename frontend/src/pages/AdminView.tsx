@@ -1,16 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
-import AdminTable from "../components/AdminTable";
+import AdminTable, { EditableSentence } from "../components/AdminTable";
 import ImportExport from "../components/ImportExport";
 import { api } from "../lib/api";
+import { TARGET_LANGUAGES, TRANSLATION_LANGUAGES } from "../lib/languages";
 import { Sentence } from "../lib/types";
 
 type DifficultyFilter = "all" | "easy" | "medium" | "hard";
+type LanguageFilter = "all" | string;
 
 export function AdminView() {
   const [sentences, setSentences] = useState<Sentence[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [difficultyFilter, setDifficultyFilter] = useState<DifficultyFilter>("all");
+  const [targetFilter, setTargetFilter] = useState<LanguageFilter>("all");
+  const [translationFilter, setTranslationFilter] = useState<LanguageFilter>("all");
 
   useEffect(() => {
     refresh();
@@ -30,30 +34,36 @@ export function AdminView() {
   };
 
   const filteredSentences = useMemo(() => {
-    if (difficultyFilter === "all") return sentences;
-    return sentences.filter((sentence) => sentence.difficulty === difficultyFilter);
-  }, [sentences, difficultyFilter]);
+    return sentences.filter((sentence) => {
+      if (difficultyFilter !== "all" && sentence.difficulty !== difficultyFilter) {
+        return false;
+      }
+      if (targetFilter !== "all" && sentence.target_lang !== targetFilter) {
+        return false;
+      }
+      if (translationFilter !== "all" && sentence.translation_lang !== translationFilter) {
+        return false;
+      }
+      return true;
+    });
+  }, [sentences, difficultyFilter, targetFilter, translationFilter]);
 
-  const handleCreate = async (data: {
-    fr_text: string;
-    en_text?: string | null;
-    difficulty: string;
-    tags?: string;
-  }) => {
-    await api.createSentence(data);
+  const sanitizePayload = (data: EditableSentence) => ({
+    sentence_text: data.sentence_text,
+    translation_text: data.translation_text?.trim() || "",
+    target_lang: data.target_lang,
+    translation_lang: data.translation_lang,
+    difficulty: data.difficulty,
+    tags: data.tags ?? ""
+  });
+
+  const handleCreate = async (data: EditableSentence) => {
+    await api.createSentence(sanitizePayload(data));
     await refresh();
   };
 
-  const handleUpdate = async (
-    id: string,
-    data: {
-      fr_text: string;
-      en_text?: string | null;
-      difficulty: string;
-      tags?: string;
-    }
-  ) => {
-    await api.updateSentence(id, data);
+  const handleUpdate = async (id: string, data: EditableSentence) => {
+    await api.updateSentence(id, sanitizePayload(data));
     await refresh();
   };
 
@@ -90,7 +100,7 @@ export function AdminView() {
         </p>
         <div className="filters">
           <label>
-            Filtrer par difficulté :
+            Difficulté :
             <select
               value={difficultyFilter}
               onChange={(event) => setDifficultyFilter(event.target.value as DifficultyFilter)}
@@ -99,6 +109,34 @@ export function AdminView() {
               <option value="easy">Facile</option>
               <option value="medium">Moyen</option>
               <option value="hard">Difficile</option>
+            </select>
+          </label>
+          <label>
+            Langue cible :
+            <select
+              value={targetFilter}
+              onChange={(event) => setTargetFilter(event.target.value as LanguageFilter)}
+            >
+              <option value="all">Toutes</option>
+              {TARGET_LANGUAGES.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.label}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label>
+            Langue de traduction :
+            <select
+              value={translationFilter}
+              onChange={(event) => setTranslationFilter(event.target.value as LanguageFilter)}
+            >
+              <option value="all">Toutes</option>
+              {TRANSLATION_LANGUAGES.map((lang) => (
+                <option key={lang.code} value={lang.code}>
+                  {lang.label}
+                </option>
+              ))}
             </select>
           </label>
           <button type="button" onClick={refresh} disabled={loading}>

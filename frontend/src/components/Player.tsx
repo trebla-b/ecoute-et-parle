@@ -1,16 +1,30 @@
+import { getLanguageLabel } from "../lib/languages";
 import { Sentence } from "../lib/types";
 
 interface PlayerProps {
   sentence: Sentence | null;
-  showFrench: boolean;
-  showEnglish: boolean;
+  showSentenceText: boolean;
+  showTranslation: boolean;
   onPlay: () => void;
+  targetLang: string;
+  translationLang: string;
 }
 
-export function Player({ sentence, showFrench, showEnglish, onPlay }: PlayerProps) {
+export function Player({
+  sentence,
+  showSentenceText,
+  showTranslation,
+  onPlay,
+  targetLang,
+  translationLang
+}: PlayerProps) {
   if (!sentence) {
     return <div className="card">Aucune phrase disponible.</div>;
   }
+
+  const translationAvailable =
+    sentence.translation_text &&
+    (!translationLang || sentence.translation_lang === translationLang);
 
   return (
     <article className="card player-card">
@@ -21,14 +35,32 @@ export function Player({ sentence, showFrench, showEnglish, onPlay }: PlayerProp
         </button>
       </header>
       <section className="player-body">
-        {showFrench ? <p className="sentence-text">{sentence.fr_text}</p> : null}
-        {showEnglish ? <p className="sentence-translation">{sentence.en_text || "—"}</p> : null}
+        {showSentenceText ? (
+          <div>
+            <p className="sentence-text">{sentence.sentence_text}</p>
+            <small className="muted">{getLanguageLabel(targetLang)}</small>
+          </div>
+        ) : null}
+        {showTranslation ? (
+          <div>
+            <p className="sentence-translation">
+              {translationAvailable ? sentence.translation_text : "Traduction indisponible"}
+            </p>
+            <small className="muted">{getLanguageLabel(translationLang)}</small>
+          </div>
+        ) : null}
       </section>
       {sentence.tags && (
         <footer className="player-footer">
           <small>Mots-clés : {sentence.tags}</small>
         </footer>
       )}
+      {!translationAvailable && showTranslation ? (
+        <p className="muted">
+          Aucune traduction en {getLanguageLabel(translationLang)} pour cette phrase (langue
+          d'origine : {getLanguageLabel(sentence.translation_lang)}).
+        </p>
+      ) : null}
     </article>
   );
 }

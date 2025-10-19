@@ -1,7 +1,11 @@
 import { useMemo, useState } from "react";
+import { TARGET_LANGUAGES, TRANSLATION_LANGUAGES } from "../lib/languages";
 import { Sentence } from "../lib/types";
 
-type EditableSentence = Pick<Sentence, "fr_text" | "en_text" | "difficulty" | "tags">;
+export type EditableSentence = Pick<
+  Sentence,
+  "sentence_text" | "translation_text" | "target_lang" | "translation_lang" | "difficulty" | "tags"
+>;
 
 interface AdminTableProps {
   sentences: Sentence[];
@@ -12,8 +16,10 @@ interface AdminTableProps {
 }
 
 const DEFAULT_SENTENCE: EditableSentence = {
-  fr_text: "",
-  en_text: "",
+  sentence_text: "",
+  translation_text: "",
+  target_lang: "fr-FR",
+  translation_lang: "zh-CN",
   difficulty: "medium",
   tags: ""
 };
@@ -25,7 +31,7 @@ export function AdminTable({ sentences, onCreate, onUpdate, onDelete, loading }:
   const [error, setError] = useState<string | null>(null);
 
   const orderedSentences = useMemo(
-    () => [...sentences].sort((a, b) => a.fr_text.localeCompare(b.fr_text)),
+    () => [...sentences].sort((a, b) => a.sentence_text.localeCompare(b.sentence_text)),
     [sentences]
   );
 
@@ -33,8 +39,10 @@ export function AdminTable({ sentences, onCreate, onUpdate, onDelete, loading }:
     setEditingId(sentence.id);
     setIsCreating(false);
     setDraft({
-      fr_text: sentence.fr_text,
-      en_text: sentence.en_text ?? "",
+      sentence_text: sentence.sentence_text,
+      translation_text: sentence.translation_text ?? "",
+      target_lang: sentence.target_lang,
+      translation_lang: sentence.translation_lang,
       difficulty: sentence.difficulty,
       tags: sentence.tags ?? ""
     });
@@ -58,8 +66,8 @@ export function AdminTable({ sentences, onCreate, onUpdate, onDelete, loading }:
   };
 
   const handleSubmit = async () => {
-    if (!draft.fr_text.trim()) {
-      setError("Le texte français est requis.");
+    if (!draft.sentence_text.trim()) {
+      setError("Le texte de la phrase est requis.");
       return;
     }
 
@@ -90,8 +98,10 @@ export function AdminTable({ sentences, onCreate, onUpdate, onDelete, loading }:
         <table>
           <thead>
             <tr>
-              <th>Français</th>
-              <th>Anglais</th>
+              <th>Phrase</th>
+              <th>Langue cible</th>
+              <th>Traduction</th>
+              <th>Langue trad.</th>
               <th>Difficulté</th>
               <th>Tags</th>
               <th>Actions</th>
@@ -119,8 +129,10 @@ export function AdminTable({ sentences, onCreate, onUpdate, onDelete, loading }:
                 />
               ) : (
                 <tr key={sentence.id}>
-                  <td>{sentence.fr_text}</td>
-                  <td>{sentence.en_text || "—"}</td>
+                  <td>{sentence.sentence_text}</td>
+                  <td>{sentence.target_lang}</td>
+                  <td>{sentence.translation_text || "—"}</td>
+                  <td>{sentence.translation_lang}</td>
                   <td>
                     <span className={`badge difficulty ${sentence.difficulty}`}>
                       {sentence.difficulty}
@@ -145,8 +157,8 @@ export function AdminTable({ sentences, onCreate, onUpdate, onDelete, loading }:
             )}
             {!sentences.length && !isCreating ? (
               <tr>
-                <td colSpan={5} className="muted">
-                  Importez une CSV ou ajoutez une phrase pour commencer.
+                <td colSpan={7} className="muted">
+                  Importez un CSV ou ajoutez une phrase pour commencer.
                 </td>
               </tr>
             ) : null}
@@ -170,17 +182,41 @@ function EditableRow({ draft, onChange, onCancel, onSubmit, busy }: EditableRowP
     <tr className="editing-row">
       <td>
         <textarea
-          value={draft.fr_text}
-          onChange={(event) => onChange("fr_text", event.target.value)}
+          value={draft.sentence_text}
+          onChange={(event) => onChange("sentence_text", event.target.value)}
           rows={2}
         />
       </td>
       <td>
+        <select
+          value={draft.target_lang}
+          onChange={(event) => onChange("target_lang", event.target.value)}
+        >
+          {TARGET_LANGUAGES.map((lang) => (
+            <option key={lang.code} value={lang.code}>
+              {lang.label}
+            </option>
+          ))}
+        </select>
+      </td>
+      <td>
         <textarea
-          value={draft.en_text ?? ""}
-          onChange={(event) => onChange("en_text", event.target.value)}
+          value={draft.translation_text ?? ""}
+          onChange={(event) => onChange("translation_text", event.target.value)}
           rows={2}
         />
+      </td>
+      <td>
+        <select
+          value={draft.translation_lang}
+          onChange={(event) => onChange("translation_lang", event.target.value)}
+        >
+          {TRANSLATION_LANGUAGES.map((lang) => (
+            <option key={lang.code} value={lang.code}>
+              {lang.label}
+            </option>
+          ))}
+        </select>
       </td>
       <td>
         <select

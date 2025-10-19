@@ -30,8 +30,10 @@ ATTEMPTS_CSV = DATA_DIR / "attempts.csv"
 
 SENTENCE_FIELDS = [
     "id",
-    "fr_text",
-    "en_text",
+    "target_lang",
+    "sentence_text",
+    "translation_lang",
+    "translation_text",
     "difficulty",
     "tags",
     "created_at",
@@ -41,6 +43,8 @@ SENTENCE_FIELDS = [
 ATTEMPT_FIELDS = [
     "id",
     "sentence_id",
+    "target_lang",
+    "asr_lang",
     "asr_text",
     "score",
     "words_total",
@@ -83,6 +87,8 @@ def create_app() -> FastAPI:
         offset: int = Query(0, ge=0),
         difficulty: Optional[str] = Query(None),
         search: Optional[str] = Query(None),
+        target_lang: Optional[str] = Query(None),
+        translation_lang: Optional[str] = Query(None),
         store: CSVStore = Depends(get_sentence_store),
     ) -> List[Sentence]:
         rows = store.read_all()
@@ -91,8 +97,14 @@ def create_app() -> FastAPI:
             sentence = sentence_from_row(row)
             if difficulty and sentence.difficulty != difficulty:
                 continue
+            if target_lang and sentence.target_lang != target_lang:
+                continue
+            if translation_lang and sentence.translation_lang != translation_lang:
+                continue
             if search:
-                haystack = f"{sentence.fr_text} {sentence.en_text or ''}".lower()
+                haystack = (
+                    f"{sentence.sentence_text} {sentence.translation_text or ''}".lower()
+                )
                 if search.lower() not in haystack:
                     continue
             filtered.append(sentence)
@@ -164,7 +176,7 @@ def create_app() -> FastAPI:
         reader = csv.DictReader(io.StringIO(text))
         if reader.fieldnames is None:
             raise HTTPException(status_code=400, detail="CSV missing header row")
-        required = {"fr_text"}
+        required = {"sentence_text", "target_lang"}
         missing = required - set(reader.fieldnames)
         if missing:
             raise HTTPException(
@@ -175,12 +187,14 @@ def create_app() -> FastAPI:
         count = 0
         for raw_row in reader:
             row = {field: (raw_row.get(field) or "").strip() for field in reader.fieldnames}
-            if not row["fr_text"]:
+            if not row["sentence_text"]:
                 continue
             sentence = Sentence(
                 id=row.get("id") or str(uuid.uuid4()),
-                fr_text=row["fr_text"],
-                en_text=row.get("en_text") or None,
+                sentence_text=row["sentence_text"],
+                target_lang=row.get("target_lang") or "fr-FR",
+                translation_text=row.get("translation_text") or None,
+                translation_lang=row.get("translation_lang") or "zh-CN",
                 difficulty=row.get("difficulty") or "medium",
                 tags=row.get("tags") or "",
                 created_at=row.get("created_at") or now_iso(),
@@ -198,12 +212,15 @@ def create_app() -> FastAPI:
     @app.get("/api/attempts", response_model=List[Attempt])
     def list_attempts(
         sentence_id: Optional[str] = Query(None),
+        target_lang: Optional[str] = Query(None),
         store: CSVStore = Depends(get_attempt_store),
     ) -> List[Attempt]:
         rows = store.read_all()
         attempts = [attempt_from_row(row) for row in rows]
         if sentence_id:
             attempts = [attempt for attempt in attempts if attempt.sentence_id == sentence_id]
+        if target_lang:
+            attempts = [attempt for attempt in attempts if attempt.target_lang == target_lang]
         return attempts
 
     @app.post("/api/attempts", response_model=Attempt, status_code=201)
@@ -224,8 +241,10 @@ def create_app() -> FastAPI:
 def sentence_from_row(row: dict) -> Sentence:
     data = {
         "id": row.get("id") or str(uuid.uuid4()),
-        "fr_text": row.get("fr_text") or "",
-        "en_text": row.get("en_text") or None,
+        "target_lang": row.get("target_lang") or "fr-FR",
+        "sentence_text": row.get("sentence_text") or "",
+        "translation_lang": row.get("translation_lang") or "zh-CN",
+        "translation_text": row.get("translation_text") or None,
         "difficulty": row.get("difficulty") or "medium",
         "tags": row.get("tags") or "",
         "created_at": row.get("created_at") or now_iso(),
@@ -238,8 +257,10 @@ def sentence_to_row(sentence: Sentence) -> dict:
     data = sentence.model_dump()
     return {
         "id": data["id"],
-        "fr_text": data["fr_text"],
-        "en_text": data.get("en_text") or "",
+        "target_lang": data["target_lang"],
+        "sentence_text": data["sentence_text"],
+        "translation_lang": data["translation_lang"],
+        "translation_text": data.get("translation_text") or "",
         "difficulty": data.get("difficulty") or "",
         "tags": data.get("tags") or "",
         "created_at": data["created_at"],
@@ -256,6 +277,8 @@ def attempt_from_row(row: dict) -> Attempt:
     data = {
         "id": row.get("id") or str(uuid.uuid4()),
         "sentence_id": row.get("sentence_id") or "",
+        "target_lang": row.get("target_lang") or "fr-FR",
+        "asr_lang": row.get("asr_lang") or row.get("target_lang") or "fr-FR",
         "asr_text": row.get("asr_text") or "",
         "score": float(row.get("score") or 0),
         "words_total": int(row.get("words_total") or 0),
@@ -272,6 +295,8 @@ def attempt_to_row(attempt: Attempt) -> dict:
     return {
         "id": data["id"],
         "sentence_id": data["sentence_id"],
+        "target_lang": data["target_lang"],
+        "asr_lang": data["asr_lang"],
         "asr_text": data["asr_text"],
         "score": f"{data['score']}",
         "words_total": str(data["words_total"]),
