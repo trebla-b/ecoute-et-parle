@@ -1,0 +1,61 @@
+id,fr_text,en_text,difficulty,tags,created_at,updated_at
+684676d4-9e1b-45ae-9dda-ad8cbd95fc86,"Bonjour, comment ça va ?","Hello, how are you?",easy,salutation,2025-10-19T20:05:01,2025-10-19T20:05:01
+d2746472-1504-4e9d-8317-1a927e5a1e48,Je m'appelle Marie.,My name is Marie.,easy,présentation,2025-10-19T20:05:01,2025-10-19T20:05:01
+d77508bf-dffa-4838-9d68-372f489251a2,J'habite à Lyon.,I live in Lyon.,easy,ville,2025-10-19T20:05:01,2025-10-19T20:05:01
+09970ccd-f625-4f9c-bf16-2c247781b549,"Je voudrais un café, s'il vous plaît.","I'd like a coffee, please.",easy,"restaurant,commande",2025-10-19T20:05:01,2025-10-19T20:05:01
+6107f3fa-7687-4d5e-8fa8-86082978cdf3,Il fait beau aujourd'hui.,The weather is nice today.,easy,météo,2025-10-19T20:05:01,2025-10-19T20:05:01
+5d615dc7-6ab6-4d84-baa8-941f192c37e0,Où est la gare ?,Where is the train station?,easy,"transport,direction",2025-10-19T20:05:01,2025-10-19T20:05:01
+6f2469f6-7a88-4f8f-9d57-3304eba4da34,Je suis heureux de te voir.,I'm happy to see you.,easy,émotion,2025-10-19T20:05:01,2025-10-19T20:05:01
+8bc0e4a4-0997-46cf-8436-88624e05494a,Quel âge as-tu ?,How old are you?,easy,conversation,2025-10-19T20:05:01,2025-10-19T20:05:01
+7d72deef-9797-48c5-a984-ac59fd2fc9cb,Je travaille demain matin.,I work tomorrow morning.,easy,"temps,travail",2025-10-19T20:05:01,2025-10-19T20:05:01
+39c74cfe-4bca-4763-8deb-994025833341,Nous partons en vacances.,We're leaving on vacation.,easy,voyage,2025-10-19T20:05:01,2025-10-19T20:05:01
+f4b34878-af6e-4e32-945e-f1772b706718,J'aime écouter de la musique.,I like listening to music.,easy,loisir,2025-10-19T20:05:01,2025-10-19T20:05:01
+f123ab62-2a8d-400b-9a34-2a0a5c194115,"Peux-tu répéter, s'il te plaît ?","Can you repeat, please?",easy,conversation,2025-10-19T20:05:01,2025-10-19T20:05:01
+73e3352a-a027-401f-9abf-6f4354546787,Le train arrive à midi.,The train arrives at noon.,easy,transport,2025-10-19T20:05:01,2025-10-19T20:05:01
+350a909f-9aba-4fb4-bff5-ee53e4c4c35c,Je prends le bus pour l'école.,I take the bus to school.,easy,"transport,école",2025-10-19T20:05:01,2025-10-19T20:05:01
+db5f1dbe-5d51-43c7-ac4e-0e82d962f461,Elle lit un nouveau livre.,She is reading a new book.,easy,lecture,2025-10-19T20:05:01,2025-10-19T20:05:01
+dac0e7e4-a768-4930-9de3-45a96103d666,Nous avons un chien.,We have a dog.,easy,famille,2025-10-19T20:05:01,2025-10-19T20:05:01
+ea9e8bfc-033f-418f-84dd-51b450010383,Je prépare le dîner.,I'm preparing dinner.,easy,cuisine,2025-10-19T20:05:01,2025-10-19T20:05:01
+acd03831-1563-4eb2-b7af-9146c6c15d0f,Il pleut cet après-midi.,It's raining this afternoon.,easy,météo,2025-10-19T20:05:01,2025-10-19T20:05:01
+14d35fae-4e36-4413-abfc-b1fed35d565a,Je vais au marché.,I'm going to the market.,easy,courses,2025-10-19T20:05:01,2025-10-19T20:05:01
+ff51308e-5ce9-4a4c-bba7-6bb4348341e0,Merci pour votre aide.,Thank you for your help.,easy,politesse,2025-10-19T20:05:01,2025-10-19T20:05:01
+141f4a3d-fbf3-495b-a7ac-fccc44880806,Je dois acheter des légumes frais pour la soupe.,I need to buy fresh vegetables for the soup.,medium,"courses,cuisine",2025-10-19T20:05:01,2025-10-19T20:05:01
+f159bbe6-893c-431c-a6d8-5535f21e8133,Ils attendent leurs amis devant le cinéma.,They are waiting for their friends in front of the cinema.,medium,"rendez-vous,loisir",2025-10-19T20:05:01,2025-10-19T20:05:01
+e79bb271-c175-49f9-8797-ac8ad882fd75,Nous avons réservé une table pour quatre personnes.,We reserved a table for four people.,medium,restaurant,2025-10-19T20:05:01,2025-10-19T20:05:01
+525e80fc-54f6-4e64-882d-07f399bf79f3,Le médecin m'a conseillé de faire plus d'exercice.,The doctor advised me to exercise more.,medium,santé,2025-10-19T20:05:01,2025-10-19T20:05:01
+486ee717-ab73-4359-8f6c-7d57b9f58cf7,Peux-tu me prêter ta voiture ce week-end ?,Can you lend me your car this weekend?,medium,"favori,transport",2025-10-19T20:05:01,2025-10-19T20:05:01
+884c9cfe-c650-4654-ac62-dba4f9aad5a2,Je cherche un cadeau original pour l'anniversaire de ma sœur.,I'm looking for an original gift for my sister's birthday.,medium,"famille,shopping",2025-10-19T20:05:01,2025-10-19T20:05:01
+34b2d416-e7fd-49fe-af79-382de9992840,Nous avons visité un musée d'art contemporain.,We visited a contemporary art museum.,medium,culture,2025-10-19T20:05:01,2025-10-19T20:05:01
+a551deb8-c437-43e4-8ced-2e4fb6c0c0c8,Ils habitent dans un petit village près de la mer.,They live in a small village near the sea.,medium,"ville,géographie",2025-10-19T20:05:01,2025-10-19T20:05:01
+07254d30-2375-47b5-b70c-b95ac25b943e,Je dois terminer ce rapport avant vendredi soir.,I must finish this report before Friday evening.,medium,travail,2025-10-19T20:05:01,2025-10-19T20:05:01
+5adf79d1-f0b7-4c7d-9993-f503634f7c42,Le train a été retardé à cause du mauvais temps.,The train was delayed because of the bad weather.,medium,"transport,météo",2025-10-19T20:05:01,2025-10-19T20:05:01
+6cdea264-0242-4799-8928-99af0a573858,Nous avons adopté un chat noir l'automne dernier.,We adopted a black cat last autumn.,medium,animaux,2025-10-19T20:05:01,2025-10-19T20:05:01
+5f145cee-c027-4db1-b364-18837777cec3,Ils organisent une fête surprise pour leur ami.,They're organizing a surprise party for their friend.,medium,événement,2025-10-19T20:05:01,2025-10-19T20:05:01
+18d0c67e-8154-4660-9c37-f1627931ebde,J'apprends le français depuis six mois.,I've been learning French for six months.,medium,langue,2025-10-19T20:05:01,2025-10-19T20:05:01
+e4120be2-995a-4078-b11d-fd97c8170363,Elle joue du piano depuis son enfance.,She has played the piano since childhood.,medium,musique,2025-10-19T20:05:01,2025-10-19T20:05:01
+a11d7c7c-2beb-4345-bfdd-e13cafa3cfc6,Le professeur a expliqué la leçon avec patience.,The teacher explained the lesson patiently.,medium,éducation,2025-10-19T20:05:01,2025-10-19T20:05:01
+64722fb8-7e8e-4932-a37e-4734ca12c5c8,Nous avons fait une randonnée dans les Alpes.,We went for a hike in the Alps.,medium,"voyage,nature",2025-10-19T20:05:01,2025-10-19T20:05:01
+f3910861-977d-4656-8672-eb1a931708c8,Je dois renouveler mon passeport avant de voyager.,I need to renew my passport before traveling.,medium,administratif,2025-10-19T20:05:01,2025-10-19T20:05:01
+d730c068-dd64-4ce6-be03-0455836bbcad,Ils discutent des prochaines élections municipales.,They are discussing the upcoming municipal elections.,medium,politique,2025-10-19T20:05:01,2025-10-19T20:05:01
+56ab389b-ce76-4bc1-ba52-c2248062b6ea,Elle prépare un dessert au chocolat pour ses invités.,She's preparing a chocolate dessert for her guests.,medium,cuisine,2025-10-19T20:05:01,2025-10-19T20:05:01
+e02e9422-a985-4b6b-817f-de3c0a5b0686,Nous avons planté des fleurs dans le jardin ce matin.,We planted flowers in the garden this morning.,medium,jardinage,2025-10-19T20:05:01,2025-10-19T20:05:01
+db0d9bef-2337-4600-a9cc-3be7e40f2229,"Même si la pluie tombait sans cesse, ils décidèrent de continuer leur promenade le long du fleuve.","Even though the rain kept falling, they decided to continue their walk along the river.",hard,"météo,nature",2025-10-19T20:05:01,2025-10-19T20:05:01
+4af6b2e4-4507-4d43-8d3c-b912d5bd9a24,Il faudra négocier attentivement le contrat afin d'éviter toute ambiguïté juridique.,The contract will need to be negotiated carefully to avoid any legal ambiguity.,hard,"travail,juridique",2025-10-19T20:05:01,2025-10-19T20:05:01
+7764208a-dd58-41bf-a8b0-40d6055f83f3,"Ayant oublié son parapluie, elle improvisa un abri avec son sac et un vieux journal.","Having forgotten her umbrella, she improvised shelter with her bag and an old newspaper.",hard,"quotidien,improvisation",2025-10-19T20:05:01,2025-10-19T20:05:01
+2970b63a-9898-4604-a1ae-a72bec79f3db,Le chef a revisité ce plat traditionnel en y ajoutant des épices venues d'Asie.,The chef reinvented this traditional dish by adding spices from Asia.,hard,"cuisine,innovation",2025-10-19T20:05:01,2025-10-19T20:05:01
+a7c4b605-4146-42ae-9b95-938ab260f271,Nous devrons analyser les résultats dans leur contexte historique pour comprendre leurs conséquences.,We will need to analyze the results in their historical context to understand their consequences.,hard,"histoire,analyse",2025-10-19T20:05:01,2025-10-19T20:05:01
+6590c2c1-e1c5-4f9e-b049-86458c8902ec,"Bien qu'ils aient peu dormi, ils terminèrent le projet avant l'échéance fixée.","Although they slept little, they finished the project before the deadline.",hard,"travail,projet",2025-10-19T20:05:01,2025-10-19T20:05:01
+4e37a662-fbbb-4c8a-b348-e44c837c285f,"Si tu avais assisté à la réunion, tu aurais compris les enjeux financiers.","If you had attended the meeting, you would have understood the financial stakes.",hard,"finance,conditionnel",2025-10-19T20:05:01,2025-10-19T20:05:01
+446adc95-e2c6-479a-b409-5ed2613f56ea,Elle raconte avec émotion les souvenirs d'enfance passés dans cette maison isolée.,She recounts with emotion the childhood memories spent in that isolated house.,hard,"souvenir,émotion",2025-10-19T20:05:01,2025-10-19T20:05:01
+ccd26e0d-3248-4534-8690-ce8b58b7c50c,"Après avoir consulté plusieurs experts, ils ont finalement opté pour une solution durable.","After consulting several experts, they finally opted for a sustainable solution.",hard,"environnement,décision",2025-10-19T20:05:01,2025-10-19T20:05:01
+07373fd6-3da8-4517-9ce9-7350e0589199,Le scientifique a démontré l'hypothèse grâce à une série d'expériences minutieuses.,The scientist proved the hypothesis through a series of meticulous experiments.,hard,"science,recherche",2025-10-19T20:05:01,2025-10-19T20:05:01
+5a62f357-d0b7-4d17-bb27-0877bd16e55a,"Malgré les obstacles administratifs, l'association a réussi à obtenir les autorisations nécessaires.","Despite administrative obstacles, the association managed to obtain the necessary permits.",hard,"administratif,association",2025-10-19T20:05:01,2025-10-19T20:05:01
+5f4e76e1-7ee0-41d8-863d-014e46e2e744,Elle a confié son manuscrit à un éditeur qui a accepté de le publier l'année prochaine.,She entrusted her manuscript to a publisher who agreed to release it next year.,hard,"littérature,édition",2025-10-19T20:05:01,2025-10-19T20:05:01
+de0f723b-994c-492e-9ee6-18e2c56356a4,"Nous avions beau insister, il refusait de reconnaître son erreur devant le comité.","We kept insisting, but he refused to acknowledge his mistake in front of the committee.",hard,"travail,conflit",2025-10-19T20:05:01,2025-10-19T20:05:01
+37b71ec7-44a6-475c-927e-5e3479a17f5e,"Les voyageurs, fatigués mais enthousiastes, atteignirent enfin le sommet enneigé.","The travelers, tired but enthusiastic, finally reached the snowy summit.",hard,"voyage,montagne",2025-10-19T20:05:01,2025-10-19T20:05:01
+0a88c267-76ac-4ed5-9d2d-1e0931caa03a,"Une fois les documents signés, le chantier pourra officiellement commencer.","Once the documents are signed, the construction site can officially begin.",hard,"construction,administratif",2025-10-19T20:05:01,2025-10-19T20:05:01
+4156414c-f378-42ff-ac7e-d1bf66a02733,Le directeur espère que cette initiative encouragera l'innovation au sein de l'entreprise.,The director hopes this initiative will encourage innovation within the company.,hard,"entreprise,innovation",2025-10-19T20:05:01,2025-10-19T20:05:01
+e5188874-39dd-43c1-98b3-2f3fe42db1eb,Ils ont été impressionnés par la richesse du patrimoine culturel de la région.,They were impressed by the richness of the region's cultural heritage.,hard,"culture,patrimoine",2025-10-19T20:05:01,2025-10-19T20:05:01
+800ce248-d83e-4bc6-963c-723046153a2c,"Avant que tu ne partes, pourrais-tu vérifier l'état des réservations pour la semaine prochaine ?","Before you leave, could you check the status of the reservations for next week?",hard,"organisation,travail",2025-10-19T20:05:01,2025-10-19T20:05:01
+c5acf12f-16c5-4873-b159-921ebad4c3fb,La conférence a mis en lumière l'importance de la coopération internationale face aux défis climatiques.,The conference highlighted the importance of international cooperation in the face of climate challenges.,hard,"climat,coopération",2025-10-19T20:05:01,2025-10-19T20:05:01
+9ad86eca-c2ea-4d47-9826-de9bb4b82c09,"À condition que toutes les parties soient d'accord, nous signerons le partenariat mardi prochain.","Provided all parties agree, we will sign the partnership next Tuesday.",hard,"négociation,entreprise",2025-10-19T20:05:01,2025-10-19T20:05:01
